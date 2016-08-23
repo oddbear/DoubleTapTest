@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="DoubleTapTest.MainPage">
+	<ContentPage.Content>
+		<StackLayout>
+			<Label Text="Native Command:" />
+			<Button CommandParameter="0" Text="Xamarin.Forms Navigation" Command="{Binding NativeCommand}" />
+			<Button CommandParameter="1" Text="Fresh Resolved navigation" Command="{Binding NativeCommand}" />
+
+			<Label Text="Custom Command:" />
+			<Button CommandParameter="0" Text="Button shared c_command" Command="{Binding CustomSharedCommand}" />
+			<ContentView BackgroundColor="Gray" HeightRequest="40">
+				<Label Text="Tap Gesture, shared c_command" FontSize="17" HorizontalOptions="Center" VerticalOptions="Center" />
+				<ContentView.Triggers>
+					<DataTrigger TargetType="ContentView" Binding="{Binding CustomButtonCanExecute}" Value="False">
+						<Setter Property="BackgroundColor" Value="White" />
+					</DataTrigger>
+				</ContentView.Triggers>
+				<ContentView.GestureRecognizers>
+					<TapGestureRecognizer x:Name="tapGesture" Command="{Binding CustomSharedCommand}" CommandParameter="0" />
+				</ContentView.GestureRecognizers>
+			</ContentView>
+			
+			<Label Text="Shared Context in Command:" />
+			<Button CommandParameter="0" Text="Shared lock, with parameter" Command="{Binding CustomWithConvertedParamterSharedLockCommand}" />
+			<Button Text="Shared lock, witout parameter" Command="{Binding CustomWithoutParameterSharedLockCommand}" />
+			
+			<Label Text="Other:" />
+			<Button CommandParameter="0" Text="Parameter object" Command="{Binding CustomObjectTypeParameterCommand}" />
+			<Button CommandParameter="0" Text="Parameter string" Command="{Binding CustomStringTypeParameterCommand}" />
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>
