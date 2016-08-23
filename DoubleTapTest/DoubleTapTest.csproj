@@ -53,6 +53,7 @@
     <Compile Include="Commands\SharedLock.cs" />
     <Compile Include="Commands\QueuedLock.cs" />
     <Compile Include="Commands\MyFreshExtensions.cs" />
+    <Compile Include="Commands\QueuedLockCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

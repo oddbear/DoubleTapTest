@@ -1,37 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DoubleTapTest
 {
     //TODO: Add some queue and/or callback.
     public class QueuedLock
     {
-        private int _lock;
+        private readonly SemaphoreSlim _semaphore;
+
+        public bool IsLocked => _semaphore.CurrentCount == 0; //Er dette logikken?
 
         public QueuedLock()
         {
-            throw new NotImplementedException();
+            _semaphore = new SemaphoreSlim(1, 1);
         }
 
-        public bool TakeLock()
+        public Task TakeLock()
         {
-            var oldVal = Interlocked.Increment(ref _lock); //Atomic increment value.
-            var lockTaken = oldVal == 0;
-
-            //Can take lock, run code...
-            //Else add to a synchronous queue?
-
-            return lockTaken;
+            return _semaphore.WaitAsync(10000);
         }
 
-        public bool ReleaseLock()
+        public void ReleaseLock()
         {
-            var oldVal = Interlocked.Decrement(ref _lock); //1 goes in, 0 goes out.
-            var lockReleased = oldVal == 1;
-
-            //Do some callback stuff here? Start execution when earlier job is finished.
-
-            return lockReleased;
+            _semaphore.Release();
         }
     }
 }
