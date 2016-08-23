@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace DoubleTapTest
 {
-    //TODO: Add some queue and/or callback.
     public class QueuedLock
     {
         private readonly SemaphoreSlim _semaphore;
 
-        public bool IsLocked => _semaphore.CurrentCount == 0; //Er dette logikken?
+        public bool IsLocked => _semaphore.CurrentCount == 0;
 
         public QueuedLock()
         {
