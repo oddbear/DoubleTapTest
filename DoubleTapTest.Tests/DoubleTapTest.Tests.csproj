@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="SingleLockCommandTests.cs" />
     <Compile Include="QueuedLockCommandTests.cs" />
+    <Compile Include="WaitLockCommandTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -18,7 +18,7 @@ namespace DoubleTapTest
 
         public Task TakeLock()
         {
-            return _semaphore.WaitAsync(10000);
+            return _semaphore.WaitAsync();
         }
 
         public void ReleaseLock()

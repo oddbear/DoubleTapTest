@@ -24,12 +24,12 @@ namespace DoubleTapTest.Tests
             int countAfter = 0;
             Func<object, Task> execute = async (obj) =>
             {
-                Assert.Equals(countBefore, countAfter);
+                Assert.AreEqual(countBefore, countAfter);
                 countBefore++;
                 await Task.Delay(100);
                 Assert.Greater(countBefore, countAfter);
                 countAfter++;
-                Assert.Equals(countBefore, countAfter);
+                Assert.AreEqual(countBefore, countAfter);
             };
 
             //Execute is async void, so this will run in the background.
@@ -37,8 +37,8 @@ namespace DoubleTapTest.Tests
             new QueuedLockCommand(execute, _queuedLock).Execute(null);
 
             await Task.Delay(220); //Need to let execute finish.
-            Assert.Equals(2, countAfter);
-            Assert.Equals(2, countBefore);
+            Assert.AreEqual(2, countAfter);
+            Assert.AreEqual(2, countBefore);
         }
 
         [Test]
