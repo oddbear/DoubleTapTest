@@ -48,7 +48,7 @@ namespace DoubleTapTest.Tests
             command.Execute(null);
             await Task.Delay(50);
             Assert.IsFalse(command.CanExecute(null));
-            await Task.Delay(50);
+            await Task.Delay(100);
             Assert.IsTrue(command.CanExecute(null));
         }
     }

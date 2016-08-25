@@ -54,8 +54,9 @@
     <Compile Include="Commands\QueuedLock.cs" />
     <Compile Include="Commands\MyFreshExtensions.cs" />
     <Compile Include="Commands\QueuedLockCommand.cs" />
-    <Compile Include="Commands\WaitLockCommand.cs" />
-    <Compile Include="Commands\WaitLock.cs" />
+    <Compile Include="Commands\InitLockCommand.cs" />
+    <Compile Include="Commands\InitLock.cs" />
+    <Compile Include="Commands\IAsyncCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
