@@ -29,11 +29,11 @@ namespace DoubleTapTest
 
         public async Task<TResult> TryInitializie()
         {
-            Interlocked.Increment(ref _queueLength); //Must be atomic, and before WaitAsync();
+            var queuePosition = Interlocked.Increment(ref _queueLength); //Must be atomic, and before WaitAsync();
             await _semaphore.WaitAsync(); //Queues up.
             try
             {
-                if (_queueLength == 1) //If first.
+                if (queuePosition == 1) //If first.
                     _result = await _initializer();
             }
             finally
