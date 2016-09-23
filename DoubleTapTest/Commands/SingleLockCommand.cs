@@ -6,21 +6,27 @@ namespace DoubleTapTest
 {
     public class SingleLockCommand : IAsyncCommand
     {
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { _sharedLock.CanExecuteChanged += value; }
+            remove { _sharedLock.CanExecuteChanged -= value; }
+        }
 
         private readonly SharedLock _sharedLock;
         private readonly Func<object, Task> _execute;
 
-        public SingleLockCommand(Func<object, Task> execute, SharedLock sharedLock = null)
+        public SingleLockCommand(Func<object, Task> execute, SharedLock sharedLock)
         {
             if (execute == null)
                 throw new ArgumentException(nameof(execute));
+            if (sharedLock == null)
+                throw new ArgumentException(nameof(sharedLock));
 
             _execute = execute;
-            _sharedLock = sharedLock ?? new SharedLock();
+            _sharedLock = sharedLock;
         }
 
-        public SingleLockCommand(Func<Task> execute, SharedLock sharedLock = null)
+        public SingleLockCommand(Func<Task> execute, SharedLock sharedLock)
             : this((obj) => execute(), sharedLock)
         {
             if (execute == null)
@@ -32,30 +38,26 @@ namespace DoubleTapTest
             return !_sharedLock.IsLocked;
         }
 
-#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
-        public async void Execute(object parameter)
-#pragma warning restore RECS0165
+        public void Execute(object parameter)
         {
-            await ExecuteAsync(parameter);
+            ExecuteAsync(parameter)
+                .ContinueWith((task) =>
+                {
+                    //Not catchable if rethrown. Silently swallow, or kill process?
+                }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         public async Task ExecuteAsync(object parameter)
         {
             if (_sharedLock.TakeLock()) //Ignores code block if lock already taken in SharedLock.
             {
-                var events = CanExecuteChanged;
                 try
                 {
-                    if (events != null)
-                        events(this, EventArgs.Empty);
-
                     await _execute(parameter);
                 }
                 finally
                 {
                     _sharedLock.ReleaseLock();
-                    if (events != null)
-                        events(this, EventArgs.Empty);
                 }
             }
         }
@@ -63,10 +65,11 @@ namespace DoubleTapTest
 
     public class SingleLockCommand<TValue> : SingleLockCommand
     {
-        public SingleLockCommand(Func<TValue, Task> execute, SharedLock sharedLock = null)
+        public SingleLockCommand(Func<TValue, Task> execute, SharedLock sharedLock)
             : base(obj => execute((TValue)obj), sharedLock)
         {
-            //
+            if (execute == null)
+                throw new ArgumentException(nameof(execute));
         }
     }
 }

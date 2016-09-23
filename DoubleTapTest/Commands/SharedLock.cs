@@ -11,6 +11,8 @@ namespace DoubleTapTest
 
         public bool IsLocked => _lock != 0;
 
+        public event EventHandler CanExecuteChanged;
+
         public SharedLock()
         {
             _lock = 0;
@@ -27,6 +29,10 @@ namespace DoubleTapTest
                 System.Diagnostics.Debug.WriteLine($"Lock taken: {LogId}");
             else
                 System.Diagnostics.Debug.WriteLine($"Lock not taken: {LogId}");
+
+            var events = CanExecuteChanged;
+            if(lockTaken && events != null)
+                events(this, EventArgs.Empty);
             
             return lockTaken;
         }
@@ -40,6 +46,10 @@ namespace DoubleTapTest
                 System.Diagnostics.Debug.WriteLine($"Lock released: {LogId}");
             else
                 throw new InvalidOperationException($"Lock not released: {LogId}"); //Should not be possible.
+
+            var events = CanExecuteChanged;
+            if (lockReleased && events != null)
+                events(this, EventArgs.Empty);
             
             return lockReleased;
         }
